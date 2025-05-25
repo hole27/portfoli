@@ -3,31 +3,31 @@ import { ArrowRight, ExternalLink, Github } from "lucide-react";
 const projects = [
   {
     id: 1,
-    title: "SaaS Landing Page",
-    description: "A beautiful landing page app using React and Tailwind.",
+    title: "Arcsys tournament Hosting",
+    description: "A tournament hosting system for the game StepManiaX at our school. It automatically collects game data and displays live updates on the website.",
     image: "/projects/project1.png",
-    tags: ["React", "TailwindCSS", "Supabase"],
-    demoUrl: "#",
-    githubUrl: "#",
+    tags: ["React", "Vue", ".NET"],
+    demoUrl: "https://arcsys.noava.dev/",
+    // githubUrl: "#",
   },
   {
     id: 2,
-    title: "Orbit Analytics Dashboard",
+    title: "Cocktail",
     description:
-      "Interactive analytics dashboard with data visualization and filtering capabilities.",
+      "Cocktail Social Media App is a social media platform designed for cocktail enthusiasts. It allows users to share cocktail recipes, photos, and reviews, fostering a vibrant community of mixology lovers.",
     image: "/projects/project2.png",
-    tags: ["TypeScript", "D3.js", "Next.js"],
+    tags: ["React Native", "Firebase"],
     demoUrl: "#",
     githubUrl: "#",
   },
   {
     id: 3,
-    title: "E-commerce Platform",
+    title: "Power BI integration with Oliasoft AS",
     description:
-      "Full-featured e-commerce platform with user authentication and payment processing.",
+      "Developed a Power BI dashboard during a summer internship, integrated into OliaSoft’s website using React to visualize user data, development processes, and system errors.",
     image: "/projects/project3.png",
-    tags: ["React", "Node.js", "Stripe"],
-    demoUrl: "#",
+    tags: ["React", "Azure Storage", "Power BI"],
+    demoUrl: "https://oliasoft.com/",
     githubUrl: "#",
   },
 ];
@@ -100,7 +100,7 @@ export const ProjectsSection = () => {
           <a
             className="cosmic-button w-fit flex items-center mx-auto gap-2"
             target="_blank"
-            href="https://github.com/machadop1407"
+            href="https://github.com/hole27"
           >
             Check My Github <ArrowRight size={16} />
           </a>
