@@ -7,30 +7,69 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, Suspense } from "react";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, Stage, useGLTF } from "@react-three/drei";
+import { createElement } from "react";
+
+// 3D Model Component
+function SaluteModel() {
+  const { scene } = useGLTF("/models/Salute.glb");
+  return createElement("primitive", { object: scene, scale: 1.5 });
+}
+useGLTF.preload("/models/Salute.glb");
 
 export const ContactSection = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      toast({
-        title: "Message sent!",
-        description: "Thank you for your message. I'll get back to you soon.",
+    const form = e.target;
+    const formData = {
+      name: form.name.value,
+      email: form.email.value,
+      message: form.message.value,
+    };
+
+    try {
+      const res = await fetch("http://localhost:3001/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
+
+      if (res.ok) {
+        toast({
+          title: "Message sent!",
+          description: "Thank you for your message. I'll get back to you soon.",
+        });
+        form.reset();
+      } else {
+        toast({
+          title: "Failed to send",
+          description: "Something went wrong. Please try again.",
+        });
+      }
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: "Server not responding or something went wrong.",
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
+
   return (
     <section id="contact" className="py-24 px-4 relative bg-secondary/30">
       <div className="container mx-auto max-w-5xl">
         <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
-          Get In <span className="text-primary"> Touch</span>
+          Get In <span className="text-primary">Touch</span>
         </h2>
 
         <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
@@ -40,134 +79,132 @@ export const ContactSection = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           <div className="space-y-8">
-            <h3 className="text-2xl font-semibold mb-6">
-              {" "}
-              Contact Information
-            </h3>
+            <h3 className="text-2xl font-semibold mb-6">Contact Information</h3>
 
             <div className="space-y-6 justify-center">
               <div className="flex items-start space-x-4">
                 <div className="p-3 rounded-full bg-primary/10">
-                  <Mail className="h-6 w-6 text-primary" />{" "}
+                  <Mail className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-medium"> Email</h4>
+                  <h4 className="font-medium">Email</h4>
                   <a
-                    href="mailto:hello@gmail.com"
+                    href="mailto:contact@kristianjensen.site"
                     className="text-muted-foreground hover:text-primary transition-colors"
                   >
-                   kristianhj98@gmail.com
+                    contact@kristianjensen.site
                   </a>
                 </div>
               </div>
               <div className="flex items-start space-x-4">
                 <div className="p-3 rounded-full bg-primary/10">
-                  <Phone className="h-6 w-6 text-primary" />{" "}
+                  <Phone className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-medium"> Phone</h4>
+                  <h4 className="font-medium">Phone</h4>
                   <a
-                    href="tel:+11234567890"
+                    href="tel:+4741500658"
                     className="text-muted-foreground hover:text-primary transition-colors"
                   >
-                  +47 41500658
+                    +47 41500658
                   </a>
                 </div>
               </div>
               <div className="flex items-start space-x-4">
                 <div className="p-3 rounded-full bg-primary/10">
-                  <MapPin className="h-6 w-6 text-primary" />{" "}
+                  <MapPin className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-medium"> Location</h4>
-                  <a className="text-muted-foreground hover:text-primary transition-colors">
+                  <h4 className="font-medium">Location</h4>
+                  <span className="text-muted-foreground hover:text-primary transition-colors">
                     Bergen, Norway
-                  </a>
+                  </span>
                 </div>
               </div>
             </div>
 
             <div className="pt-8">
-              <h4 className="font-medium mb-4"> Connect With Me</h4>
+              <h4 className="font-medium mb-4">Connect With Me</h4>
               <div className="flex space-x-4 justify-center">
-                <a href="https://www.linkedin.com/in/kristian-hole-jensen-4571ab189/" target="_blank">
+                <a
+                  href="https://www.linkedin.com/in/kristian-hole-jensen-4571ab189/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Linkedin />
                 </a>
               </div>
             </div>
           </div>
 
-          <div
-            className="bg-card p-8 rounded-lg shadow-xs"
-            onSubmit={handleSubmit}
-          >
-            <h3 className="text-2xl font-semibold mb-6"> Send a Message</h3>
+          <div className="relative">
+            <div className="bg-card p-8 rounded-lg shadow-xs mb-6">
+              <h3 className="text-2xl font-semibold mb-6">Send a Message</h3>
+              <form className="space-y-6" onSubmit={handleSubmit}>
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium mb-2">
+                    Your Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary"
+                    placeholder="Kristian Jensen..."
+                  />
+                </div>
 
-            <form className="space-y-6">
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium mb-2"
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium mb-2">
+                    Your Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary"
+                    placeholder="kristian@gmail.com"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium mb-2">
+                    Your Message
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    required
+                    className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary resize-none"
+                    placeholder="Hello, I'd like to talk about..."
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={cn(
+                    "cosmic-button w-full flex items-center justify-center gap-2"
+                  )}
                 >
-                  {" "}
-                  Your Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  required
-                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden foucs:ring-2 focus:ring-primary"
-                  placeholder="Kristian Jensen..."
-                />
-              </div>
+                  {isSubmitting ? "Sending..." : "Send Message"}
+                  <Send size={16} />
+                </button>
+              </form>
+            </div>
 
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium mb-2"
-                >
-                  {" "}
-                  Your Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  required
-                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden foucs:ring-2 focus:ring-primary"
-                  placeholder="kristian@gmail.com"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium mb-2"
-                >
-                  {" "}
-                  Your Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  required
-                  className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden foucs:ring-2 focus:ring-primary resize-none"
-                  placeholder="Hello, I'd like to talk about..."
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={cn(
-                  "cosmic-button w-full flex items-center justify-center gap-2"
-                )}
-              >
-                {isSubmitting ? "Sending..." : "Send Message"}
-                <Send size={16} />
-              </button>
-            </form>
+            <div className="h-[300px] md:h-[350px] rounded-lg overflow-hidden shadow-md">
+              <Canvas>
+                <Suspense fallback={null}>
+                  <Stage environment="city" intensity={0.6}>
+                    <SaluteModel />
+                  </Stage>
+                  <OrbitControls enableZoom={false} />
+                </Suspense>
+              </Canvas>
+            </div>
           </div>
         </div>
       </div>
