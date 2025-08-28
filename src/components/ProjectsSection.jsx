@@ -17,8 +17,16 @@ const projects = [
       "Cocktail Social Media App is a social media platform designed for cocktail enthusiasts. It allows users to share cocktail recipes, photos, and reviews, fostering a vibrant community of mixology lovers.",
     image: "/projects/project2.png",
     tags: ["React Native", "Firebase"],
-    demoUrl: "#",
-    githubUrl: "#",
+
+  },
+   {
+    id: 2,
+    title: "Olgas bier",
+    description:
+      "This is a school project where I developed a website for selling honey from Grimstad.",
+    image: "/projects/olgas bier.png",
+    tags: ["React", "Firebase"],
+
   },
   {
     id: 3,
@@ -28,7 +36,17 @@ const projects = [
     image: "/projects/project3.png",
     tags: ["React", "Azure Storage", "Power BI"],
     demoUrl: "https://oliasoft.com/",
-    githubUrl: "#",
+    //githubUrl: "#",
+  },
+   {
+    id: 3,
+    title: "Calender for Oliasoft AS",
+    description:
+      "This is a project from Oliasoft, where interns were tasked with creating a calendar for reporting sick leave, vacations, and other special occasions.",
+    image: "/projects/calender2.png",
+    tags: ["React/redux", ".NET",],
+    demoUrl: "https://oliasoft.com/",
+    //githubUrl: "#",
   },
 ];
 
@@ -62,8 +80,11 @@ export const ProjectsSection = () => {
 
               <div className="p-6">
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tags.map((tag) => (
-                    <span className="px-2 py-1 text-xs font-medium border rounded-full bg-secondary text-secondary-foreground">
+                  {project.tags.map((tag, idx) => (
+                    <span
+                      key={tag + idx}
+                      className="px-2 py-1 text-xs font-medium border rounded-full bg-secondary text-secondary-foreground"
+                    >
                       {tag}
                     </span>
                   ))}
